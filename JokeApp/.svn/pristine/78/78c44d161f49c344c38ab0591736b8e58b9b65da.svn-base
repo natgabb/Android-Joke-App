@@ -1,0 +1,34 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class ShowJoke extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_showjoke);
+
+		DBHelper dbHelper = MainPage.getDBHelper();
+
+		Button backButton = (Button) findViewById(R.id.showjoke_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ShowJoke.this.finish();
+			}
+
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+}

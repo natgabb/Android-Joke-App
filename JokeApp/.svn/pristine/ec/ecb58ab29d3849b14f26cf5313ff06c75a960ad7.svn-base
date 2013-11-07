@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layoutSplash"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/background"
+        android:gravity="center"
+        android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/textViewSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:layout_margin="@dimen/padding_small"
+        android:text="@string/splash_text"
+        android:textSize="@dimen/textSize"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:background="@color/mainBackground"/>
+    
+    <ImageView
+        android:id="@+id/imageSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/splash_image_desc"
+        android:width="@dimen/main_buttonWidth"
+        android:height="@dimen/splash_imageHeight"
+        android:src="@drawable/garfield" />
+    
+    <Button
+        android:id="@+id/buttonSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/splash_button" 
+        android:width="@dimen/main_buttonWidth"
+        android:height="@dimen/main_buttonHeight"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/buttonBackground"
+        android:textColor="@color/buttonText"/>
+        
+    </LinearLayout>

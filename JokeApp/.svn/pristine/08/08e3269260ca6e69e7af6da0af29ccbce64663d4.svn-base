@@ -1,0 +1,172 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class AddJoke extends Activity {
+
+	private ArrayList<String> categories = new ArrayList<String>();
+	private RadioGroup radioGroup = null;
+	private EditText jokeText = null;
+	private EditText answerText = null;
+
+	private static final int GOOGLE_SEARCH_ID = 1;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_addjoke);
+
+		// Adds all the categories to the ListView.
+		addCategoriesToList();
+
+		jokeText = (EditText) findViewById(R.id.editTextJoke);
+		answerText = (EditText) findViewById(R.id.editTextAns);
+
+		Button addButton = (Button) findViewById(R.id.buttonAdd);
+		addButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				String errorMessage = "";
+				String joke = jokeText.getText().toString().trim();
+				String answer = answerText.getText().toString().trim();
+				if (joke.equals(""))
+					errorMessage = "You did not enter a joke!";
+				else if (answer.equals(""))
+					errorMessage = "You did not enter an answer!";
+
+				if (errorMessage != "") {
+					Toast.makeText(AddJoke.this, errorMessage,
+							Toast.LENGTH_LONG).show();
+				} else {
+					// Add the new valid joke.
+					DBHelper db = MainPage.getDBHelper();
+					RadioButton selectedButton = (RadioButton) radioGroup
+							.findViewById(radioGroup.getCheckedRadioButtonId());
+					String category = selectedButton.getText().toString();
+					db.addNewJoke(joke, answer, category);
+					Toast.makeText(AddJoke.this, "Added!", Toast.LENGTH_LONG)
+							.show();
+					jokeText.setText("");
+					answerText.setText("");
+				}
+			}
+
+		});
+
+		Button backButton = (Button) findViewById(R.id.addjoke_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AddJoke.this.finish();
+			}
+
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, GOOGLE_SEARCH_ID, Menu.NONE, "Google Search");
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	/**
+	 * Launches a google search on the selected category.
+	 */
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case GOOGLE_SEARCH_ID:
+			showCategoriesDialog();
+			break;
+		}
+		return false;
+	}
+
+	private void showCategoriesDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(AddJoke.this);
+
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		ListView menuListView = (ListView) inflater.inflate(
+				R.layout.menu_listview, null);
+
+		Cursor categoriesCursor = MainPage.getDBHelper().getCategories();
+		ArrayList<String> categories = new ArrayList<String>();
+		while (categoriesCursor.moveToNext())
+			categories.add(categoriesCursor.getString(1));
+
+		menuListView.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.menu_textview, categories));
+
+		menuListView.setTextFilterEnabled(true); // filter to match user input
+		menuListView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				TextView textView = (TextView) view;
+				Intent googleSearch = new Intent(Intent.ACTION_VIEW, Uri
+						.parse(getString(R.string.addjoke_googleURL)
+								+ textView.getText().toString()));
+				startActivity(googleSearch);
+			}
+
+		});
+		TextView titleTextView = (TextView) inflater.inflate(
+				R.layout.menu_textview, null);
+		titleTextView.setText(R.string.addjoke_title);
+		builder.setCustomTitle(titleTextView);
+		builder.setView(menuListView);
+
+		builder.setNegativeButton(R.string.addjoke_cancel, null);
+
+		AlertDialog confirmDialog = builder.create();
+		confirmDialog.show();
+	}
+
+	/*
+	 * Will add all the categories from the database to the ListView.
+	 */
+	private void addCategoriesToList() {
+		DBHelper db = MainPage.getDBHelper();
+		Cursor categoryCursor = db.getCategories();
+
+		while (categoryCursor.moveToNext())
+			categories.add(categoryCursor.getString(1));
+
+		radioGroup = (RadioGroup) findViewById(R.id.addjoke_radioGroup);
+
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		RadioButton newRadioButton;
+		for (String c : categories) {
+			newRadioButton = (RadioButton) inflater.inflate(
+					R.layout.addjoke_radiobutton, null);
+			newRadioButton.setText(c);
+			radioGroup.addView(newRadioButton);
+		}
+
+		// Sets the first category as selected.
+		if (radioGroup.getChildCount() > 0)
+			radioGroup.getChildAt(0).performClick();
+	}
+}

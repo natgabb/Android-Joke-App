@@ -1,0 +1,70 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class Splash extends Activity {
+
+	Handler handler;
+	Runnable newActivity;
+	Button skipButton;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_splash);
+
+		// Displays the main page after 6 seconds
+		handler = new Handler();
+		newActivity = new Runnable() {
+			public void run() {
+				startMain();
+			}
+		};
+		handler.postDelayed(newActivity, 6000);
+
+		// Skip button onClickListener
+		skipButton = (Button) findViewById(R.id.buttonSplash);
+		skipButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				// Changes the colour of the button onClick (for some reason it
+				// wasn't doing it on it's own.
+				skipButton.setBackgroundColor(getResources().getColor(
+						R.color.mainBackground));
+				skipButton.setTextColor(getResources().getColor(R.color.black));
+
+				handler.postDelayed(new Runnable() {
+					public void run() {
+						skipButton.setBackgroundColor(getResources().getColor(
+								R.color.buttonBackground));
+						skipButton.setTextColor(getResources().getColor(
+								R.color.buttonText));
+					}
+				}, 500);
+
+				// To let the time for the onClick to change back the colour of
+				// the button
+				handler.removeCallbacks(newActivity);
+				handler.postDelayed(newActivity, 550);
+			}
+		});
+	}
+
+	private void startMain() {
+		startActivity(new Intent(Splash.this, MainPage.class));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+}

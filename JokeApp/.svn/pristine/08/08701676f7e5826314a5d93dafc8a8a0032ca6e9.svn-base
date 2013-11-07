@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout_checkboxcat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical" >
+
+    <CheckBox
+        android:id="@+id/checkBoxCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center" >
+
+    </CheckBox>
+
+    <Button
+        android:id="@+id/buttonDeleteCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/buttonBackground"
+        android:gravity="center"
+        android:text="@string/setcat_deletecat"
+        android:textColor="@color/buttonText"
+        android:width="@dimen/delete_buttonWidth" >
+
+    </Button>
+
+</RelativeLayout>

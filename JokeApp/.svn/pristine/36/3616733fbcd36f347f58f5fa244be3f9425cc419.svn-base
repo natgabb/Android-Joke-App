@@ -1,0 +1,175 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public class DBHelper extends SQLiteOpenHelper {
+
+	// Jokes table
+	public static final String TABLE_JOKES = "jokes";
+	public static final String COLUMN_ID = "_id";
+	public static final String COLUMN_JOKE = "joke";
+	public static final String COLUMN_ANSWER = "answer";
+	public static final String COLUMN_CATEGORY = "category";
+
+	// Categories table
+	public static final String TABLE_CATEGORIES = "categories";
+	public static final String COLUMN_ID_CATEGORIES = "_id";
+	public static final String COLUMN_CATEGORY_CATEGORIES = "category";
+
+	private static final String DATABASE_NAME = "jokes.db";
+	private static final int DATABASE_VERSION = 9;
+
+	// Database creation sql statement
+	private static final String DATABASE_CREATE = "create table " + TABLE_JOKES
+			+ "( " + COLUMN_ID + " integer primary key autoincrement, "
+			+ COLUMN_JOKE + " text not null, " + COLUMN_ANSWER
+			+ " text not null, " + COLUMN_CATEGORY + " text not null);";
+
+	// Database creation of the categories table
+	private static final String CATEGORIES_CREATE = "create table "
+			+ TABLE_CATEGORIES + "( " + COLUMN_ID_CATEGORIES
+			+ " integer primary key autoincrement, "
+			+ COLUMN_CATEGORY_CATEGORIES + " text not null unique);";
+
+	public DBHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase database) {
+		try {
+			database.execSQL(DATABASE_CREATE);
+			database.execSQL(CATEGORIES_CREATE);
+
+			// Inserts the default categories.
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Kids');");
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Dumb');");
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Geek');");
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Kids2');");
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Dumb2');");
+			database.execSQL("insert into " + TABLE_CATEGORIES
+					+ " values(null, 'Geek2');");
+
+			// Insert the default jokes.
+
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'How many balls of string would it take to reach the moon?', "
+					+ "'Just one if it''s long enough!', 'Kids');");
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'How do we know that the Earth won''t come to an end?', "
+					+ "'Because it''s round!', 'Kids');");
+
+			database.execSQL("insert into " + TABLE_JOKES
+					+ " values(null, 'What do cats eat for breakfast?', "
+					+ "'Mice Krispries!','Dumb');");
+
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'What''s the last thing that goes through a bug''s mind when it hits a windshield?','Its butt','Dumb');");
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'What''s it called when you lend money to a bison?','A BUFFA-LOAN!','Dumb');");
+
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'How did the programmer die in the shower?','He read the shampoo bottle instructions: Lather. Rinse. Repeat.','Geek');");
+			database.execSQL("insert into "
+					+ TABLE_JOKES
+					+ " values(null, 'Why do programmers always confuse Halloween and Christmas?','Because OCT 31 = DEC 25','Geek');");
+		} catch (Exception e) {
+			Log.e(MainPage.TAG,
+					"Exception caught while creating the database:\n"
+							+ e.getClass() + " " + e.getMessage());
+		}
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(DBHelper.class.getName(), "Upgrading database from version "
+				+ oldVersion + " to " + newVersion
+				+ ", which will destroy all old data");
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_JOKES);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+		onCreate(db);
+	}
+
+	public Cursor getJokes() {
+		return getWritableDatabase().query(TABLE_JOKES, null, null, null, null,
+				null, null);
+	}
+
+	public Cursor getJokesInCategories(String[] categories) {
+		return getWritableDatabase().query(TABLE_JOKES, null,
+				COLUMN_CATEGORY + "=?", categories, null, null, null);
+	}
+
+	public Cursor getCategories() {
+		Cursor categoriesCursor = null;
+		try {
+			categoriesCursor = getWritableDatabase().query(TABLE_CATEGORIES,
+					null, null, null, null, null, null);
+		} catch (Exception e) {
+			Log.e(MainPage.TAG, "Exception caught while getting categories:\n"
+					+ e.getClass() + " " + e.getMessage());
+		}
+		return categoriesCursor;
+	}
+
+	public long addNewJoke(String joke, String answer, String category) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_JOKE, joke);
+		cv.put(COLUMN_ANSWER, answer);
+		cv.put(COLUMN_CATEGORY, category);
+
+		return getWritableDatabase().insert(TABLE_JOKES, null, cv);
+	}
+
+	public long addNewCategory(String category) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_CATEGORY_CATEGORIES, category);
+
+		return getWritableDatabase().insert(TABLE_CATEGORIES, null, cv);
+	}
+
+	public boolean deleteJoke(int id) {
+		Boolean deleted = true;
+		try {
+			getWritableDatabase().delete(TABLE_JOKES, COLUMN_ID + "=?",
+					new String[] { String.valueOf(id) });
+		} catch (Exception e) {
+			Log.e(MainPage.TAG,
+					"Exception caught while deleting joke:\n" + "Category id: "
+							+ id + "\n" + e.getClass() + " " + e.getMessage());
+			deleted = false;
+		}
+		
+		return deleted;
+	}
+
+	public boolean deleteCategory(int id) {
+		boolean deleted = true;		
+		try {
+			getWritableDatabase().delete(TABLE_CATEGORIES, COLUMN_ID + "=?",
+					new String[] { String.valueOf(id) });
+		} catch (Exception e) {
+			Log.e(MainPage.TAG,
+					"Exception caught while deleting category:\n"
+							+ "Category id: " + id + "\n" + e.getClass() + " "
+							+ e.getMessage());
+			deleted = false;
+		}		
+		return deleted;
+	}
+}

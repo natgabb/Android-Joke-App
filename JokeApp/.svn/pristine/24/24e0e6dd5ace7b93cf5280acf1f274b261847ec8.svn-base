@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textViewQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/mainBackground"
+        android:text="textViewQuestion"
+        android:textSize="@dimen/textSize" />
+
+    <Button
+        android:id="@+id/buttonShowAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/buttonBackground"
+        android:text="Show Answer"
+        android:textColor="@color/buttonText"
+        android:width="@dimen/main_buttonWidth" />
+
+    <TextView
+        android:id="@+id/textViewAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/mainBackground"
+        android:text="textViewAnswer"
+        android:textSize="@dimen/textSize" />
+
+    <Button
+        android:id="@+id/buttonNextJoke"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
+        android:background="@color/buttonBackground"
+        android:text="Next Joke"
+        android:textColor="@color/buttonText"
+        android:width="@dimen/main_buttonWidth" />
+
+</LinearLayout>

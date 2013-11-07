@@ -1,0 +1,162 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class ShowJoke extends Activity {
+
+	private TextView jokeView = null;
+	private TextView answerView = null;
+	private Handler handler = new Handler();
+
+	private Cursor jokes = null;
+	private Iterator<String[]> jokesIterator;
+	private ArrayList<String[]> jokesArray;
+	private static final int INDEX_OF_QUESTION = 1;
+	private static final int INDEX_OF_ANSWER = 2;
+
+	private boolean isCategorySelected = false;
+
+	private DBHelper dbHelper;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_showjoke);
+
+		dbHelper = MainPage.getDBHelper();
+
+		getJokes();
+
+		jokeView = (TextView) findViewById(R.id.textViewQuestion);
+		answerView = (TextView) findViewById(R.id.textViewAnswer);
+
+		if (isCategorySelected) {
+			saveAndShuffle();
+			showNextJoke();
+		}
+
+		Button showAnswerButton = (Button) findViewById(R.id.buttonShowAnswer);
+		showAnswerButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				stopTimer();
+				showAnswer();
+			}
+		});
+
+		Button nextJokeButton = (Button) findViewById(R.id.buttonNextJoke);
+		nextJokeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showNextJoke();
+
+			}
+		});
+
+		Button backButton = (Button) findViewById(R.id.showjoke_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ShowJoke.this.finish();
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	private void getJokes() {
+		SharedPreferences prefs = getSharedPreferences("JokeApp", MODE_PRIVATE);
+
+		ArrayList<String> categories = new ArrayList<String>();
+		String category = null;
+
+		Cursor categoryCursor = dbHelper.getCategories();
+
+		while (categoryCursor.moveToNext()) {
+			category = categoryCursor.getString(1);
+			if (prefs.getBoolean(category, true))
+				categories.add(category);
+		}
+
+		if (!categories.isEmpty()) {
+			jokes = dbHelper.getJokesInCategories(categories
+					.toArray(new String[0]));
+			if (jokes != null) {
+				if (jokes.getCount() >= 1) {
+					isCategorySelected = true;
+				} else
+					displayToastAndLeave("None of the categories you selected contain jokes!");
+			} else
+				displayToastAndLeave("The app encountered an error while retrieving the jokes!");
+		} else
+			displayToastAndLeave("No categories are selected!");
+	}
+
+	private void displayToastAndLeave(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		isCategorySelected = false;
+		this.finish();
+	}
+
+	private void saveAndShuffle() {
+		jokesArray = new ArrayList<String[]>();
+
+		while (jokes.moveToNext()) {
+			jokesArray.add(new String[] { jokes.getString(INDEX_OF_QUESTION),
+					jokes.getString(INDEX_OF_ANSWER) });
+		}
+		shuffleJokes();
+	}
+
+	private void shuffleJokes() {
+		Collections.shuffle(jokesArray);
+		jokesIterator = jokesArray.iterator();
+	}
+
+	private void showNextJoke() {
+		stopTimer();
+		String[] values = jokesIterator.next();
+		jokeView.setText(values[0]);
+		answerView.setVisibility(TextView.INVISIBLE);
+		answerView.setText(values[1]);
+
+		if (!jokesIterator.hasNext())
+			shuffleJokes();
+		handler.postDelayed(showAnswerRunnable, 3500);
+	}
+
+	private void showAnswer() {
+		answerView.setVisibility(TextView.VISIBLE);
+	}
+
+	@SuppressWarnings("unused")
+	private void switchCategory() {
+		Log.v(MainPage.DEBUG_TAG, "Switch Category not yet implemented");
+	}
+
+	private void stopTimer() {
+		handler.removeCallbacks(showAnswerRunnable);
+	}
+
+	Runnable showAnswerRunnable = new Runnable() {
+		public void run() {
+			showAnswer();
+		}
+	};
+}

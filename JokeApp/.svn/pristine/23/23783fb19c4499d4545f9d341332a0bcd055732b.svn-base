@@ -1,0 +1,102 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+public class AddJoke extends Activity {
+
+	private ArrayList<String> categories = new ArrayList<String>();
+	private static final int KIDS_ID = 1;
+	private static final int DUMB_ID = 2;
+	private static final int GEEK_ID = 3;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_addjoke);
+
+		// Adds all the categories to the ListView.
+		addCategoriesToList();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, KIDS_ID, Menu.NONE, "Kids");
+		menu.add(Menu.NONE, DUMB_ID, Menu.NONE, "Dumb");
+		menu.add(Menu.NONE, GEEK_ID, Menu.NONE, "Geek");
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	/**
+	 * Launches a google search on the selected category.
+	 */
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent googleSearch = null;
+		switch (item.getItemId()) {
+		case KIDS_ID:
+			googleSearch = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.addjoke_googleURL)
+							+ getString(R.string.setcat_kids)));
+			startActivity(googleSearch);
+			break;
+		case DUMB_ID:
+			googleSearch = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.addjoke_googleURL)
+							+ getString(R.string.setcat_dumb)));
+			startActivity(googleSearch);
+			break;
+		case GEEK_ID:
+			googleSearch = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(getString(R.string.addjoke_googleURL)
+							+ getString(R.string.setcat_geek)));
+			startActivity(googleSearch);
+			break;
+		}
+		return false;
+	}
+
+	/*
+	 * Will add all the categories from the database to the ListView.
+	 */
+	private void addCategoriesToList() {
+		DBHelper db = MainPage.getDBHelper();
+		Cursor categoryCursor = db.getCategories();
+		while (categoryCursor.moveToNext())
+			categories.add(categoryCursor.getString(1));
+		Log.d(MainPage.DEBUG_TAG, "Before finding ELV");
+		// ListView list = (ListView) findViewById(R.id.ListViewAddJokeCat);
+		RadioGroup cats = (RadioGroup) findViewById(R.id.addjoke_radioGroup);
+
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		RadioButton newRadioButton;
+		for (String c : categories) {
+			newRadioButton = (RadioButton) inflater.inflate(
+					R.layout.addjoke_radiobutton, null);
+			newRadioButton.setText(c);
+			cats.addView(newRadioButton);
+		}
+		Log.d(MainPage.DEBUG_TAG, "After finding ELV");
+		try {
+			// list.setAdapter(new ArrayAdapter<String>(this,
+			// R.layout.addjoke_radiobutton, categories));
+			Log.d(MainPage.DEBUG_TAG, "After Setting the Adapter on ELV");
+		} catch (Exception e) {
+			Log.e(MainPage.TAG,
+					"Exception occured while adding adapter to ELV: "
+							+ e.getMessage());
+		}
+	}
+}

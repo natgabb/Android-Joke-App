@@ -1,0 +1,71 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.view.View.OnClickListener;
+
+public class SetCategory extends Activity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_setcategory);
+
+		// Adds the categories to the XML.
+		addCategories();
+
+		// Checks the categories from SharedPrefs.
+		loadCategories();
+
+		Button saveButton = (Button) findViewById(R.id.set_cat_buttonSaveChanges);
+		saveButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				saveCategories();
+				SetCategory.this.finish();
+			}
+
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	/*
+	 * Adds the categories to the ListView.
+	 */
+	private void addCategories() {
+
+		// DBHelper db = new DBHelper(this);
+		// Cursor categories = db.getCategories();
+
+		ListView list = (ListView) findViewById(R.id.listViewCategories);
+		for (int i = 0; i < 20; i++) {
+			CheckBox box = new CheckBox(this);
+			box.setText("Kids " + i);
+			list.addView(box);
+		}
+
+	}
+
+	/*
+	 * Loads the selection of categories from the SavedPreferences.
+	 */
+	private void loadCategories() {
+
+	}
+
+	/*
+	 * Saves the categories to the SavedPreferences.
+	 */
+	private void saveCategories() {
+
+	}
+}

@@ -1,0 +1,84 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class ShowJoke extends Activity {
+
+	private TextView jokeView = null;
+	private TextView answerView = null;
+
+	private Cursor jokes = null;
+	private int indexOfQuestion = 1;
+	private int indexOfAnswer = 2;
+
+	private DBHelper dbHelper;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_showjoke);
+
+		dbHelper = MainPage.getDBHelper();
+
+		Log.d(MainPage.DEBUG_TAG, "Got the dbHelper");
+
+		getJokes();
+
+		jokeView = (TextView) findViewById(R.id.textViewQuestion);
+		jokeView.setText(jokes.getString(indexOfQuestion));
+		answerView = (TextView) findViewById(R.id.textViewAnswer);
+		answerView.setText(jokes.getString(indexOfAnswer));
+
+		Log.d(MainPage.DEBUG_TAG, "Set joke and answer");
+
+		Button backButton = (Button) findViewById(R.id.showjoke_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ShowJoke.this.finish();
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	private void getJokes() {
+		SharedPreferences prefs = getSharedPreferences("JokeApp", MODE_PRIVATE);
+
+		ArrayList<String> categories = new ArrayList<String>();
+		String category = null;
+
+		Cursor categoryCursor = dbHelper.getCategories();
+		Log.d(MainPage.DEBUG_TAG, "Got the categories");
+		while (categoryCursor.moveToNext()) {
+			category = categoryCursor.getString(1);
+			if (prefs.getBoolean(category, true))
+				categories.add(category);
+		}
+
+		if (!categories.isEmpty()) {
+			for (String cat : categories)
+				Log.d(MainPage.DEBUG_TAG, cat);
+			jokes = dbHelper.getJokesInCategories(categories
+					.toArray(new String[0]));
+			if (jokes != null)
+				jokes.moveToFirst();
+			Log.d(MainPage.DEBUG_TAG, "Got the jokes");
+		}
+	}
+
+}

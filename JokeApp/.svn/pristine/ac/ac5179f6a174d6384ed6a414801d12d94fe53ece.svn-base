@@ -1,0 +1,22 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+
+public class ShowJoke extends Activity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_showjoke);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_splash, menu);
+        return true;
+    }
+
+    
+}

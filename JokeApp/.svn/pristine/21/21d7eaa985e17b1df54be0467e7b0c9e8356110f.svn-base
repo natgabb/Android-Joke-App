@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutAddJoke"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_small"
+            android:background="@color/mainBackground"
+            android:padding="@dimen/padding_small"
+            android:text="@string/addjoke_message"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewJoke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_small"
+            android:layout_span="1"
+            android:background="@color/mainBackground"
+            android:padding="@dimen/padding_small"
+            android:text="@string/addjoke_joke"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <EditText
+            android:id="@+id/editTextJoke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="text|textNoSuggestions"
+            android:text=""
+            android:textColor="@color/black" >
+
+            <requestFocus />
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewAns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_small"
+            android:background="@color/mainBackground"
+            android:padding="@dimen/padding_small"
+            android:text="@string/addjoke_ans"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+
+        <EditText
+            android:id="@+id/editTextAns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text|textNoSuggestions"
+            android:text=""
+            android:textColor="@color/black" >
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_small"
+            android:background="@color/mainBackground"
+            android:padding="@dimen/padding_small"
+            android:text="@string/addjoke_cat"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSize" />
+    </TableRow>
+
+    <RadioGroup
+        android:id="@+id/radioGroupCategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <RadioButton
+            android:id="@+id/radioKids"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/setcat_kids" />
+
+        <RadioButton
+            android:id="@+id/radioDumb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setcat_dumb" />
+
+        <RadioButton
+            android:id="@+id/radioGeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setcat_geek" />
+    </RadioGroup>
+
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/buttonBackground"
+            android:height="@dimen/main_buttonHeight"
+            android:text="@string/addjoke_add"
+            android:textColor="@color/buttonText"
+            android:width="@dimen/main_buttonWidth" />
+    </TableRow>
+
+</LinearLayout>

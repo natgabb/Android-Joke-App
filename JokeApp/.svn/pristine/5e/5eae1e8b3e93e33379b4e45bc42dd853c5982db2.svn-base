@@ -1,0 +1,103 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.view.View.OnClickListener;
+
+public class SetCategory extends Activity {
+
+	private ArrayList<String> categories = new ArrayList<String>();
+	private ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+	private SharedPreferences prefs;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_setcategory);
+
+		prefs = getSharedPreferences("JokeApp", MODE_PRIVATE);
+
+		Button saveButton = (Button) findViewById(R.id.set_cat_buttonSaveChanges);
+		Log.d("DebugTag", "After finding the button.");
+		saveButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				saveCategories();
+				close();
+			}
+
+		});
+		Log.d("DebugTag", "Set the button listener.");
+
+		// Adds the categories to the XML.
+		addCategories();
+
+		Button backButton = (Button) findViewById(R.id.setcat_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				close();
+			}
+
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+
+	/*
+	 * Adds the categories to the ListView.
+	 */
+	private void addCategories() {
+
+		DBHelper db = MainPage.getDBHelper();
+		Cursor categoryCursor = db.getCategories();
+
+		while (categoryCursor.moveToNext())
+			categories.add(categoryCursor.getString(1));
+
+		LinearLayout checkBoxesLayout = (LinearLayout) findViewById(R.id.linearLayout_setcat_checkBoxes);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		CheckBox checkBox;
+
+		for (String category : categories) {
+			checkBox = (CheckBox) inflater.inflate(R.layout.setcat_checkbox,
+					null);
+			checkBox.setText(category);
+			if (prefs.getBoolean(category, true))
+				checkBox.performClick();
+			checkBoxesLayout.addView(checkBox);
+			checkBoxes.add(checkBox);
+		}
+	}
+
+	/*
+	 * Saves the categories to the SavedPreferences.
+	 */
+	private void saveCategories() {
+		// Saves the preferences for categories.
+		SharedPreferences.Editor preferencesEditor = prefs.edit();
+		for (CheckBox checkBox : checkBoxes)
+			preferencesEditor.putBoolean(checkBox.getText().toString(),
+					checkBox.isChecked());
+
+		preferencesEditor.commit();
+	}
+
+	private void close() {
+		this.finish();
+	}
+}

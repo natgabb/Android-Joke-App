@@ -1,0 +1,10 @@
+<resources>
+
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    
+    <dimen name="main_buttonWidth">200dp</dimen>
+    <dimen name="main_buttonHeight">30dp</dimen>
+
+</resources>

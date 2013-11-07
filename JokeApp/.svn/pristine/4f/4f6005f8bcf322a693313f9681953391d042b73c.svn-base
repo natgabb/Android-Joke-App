@@ -1,0 +1,64 @@
+package cs534.gabbamonte.castonguayboisvert.assign2;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class AddCategory extends Activity {
+
+	private EditText catText = null;
+	private AsyncDBHelper database = null;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_addcategory);
+
+		database = MainPage.getAsyncDBHelper();
+		catText = (EditText) findViewById(R.id.addcat_editTextCat);
+
+		Button addButton = (Button) findViewById(R.id.addcat_buttonAdd);
+		addButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				String displayText = null;
+				String category = catText.getText().toString().trim();
+				if (category.equals(""))
+					displayText = "You didn't enter anything!";
+				else {
+					long code = database.addNewCategory(category);
+
+					if (code == -1)
+						displayText = "The category " + category
+								+ " already exists!";
+					else if (code == -2)
+						displayText = "An error occured while trying to add the category to the database!";
+					else
+						displayText = "Added!";
+				}
+				Toast.makeText(AddCategory.this, displayText,
+						Toast.LENGTH_SHORT).show();
+				catText.setText("");
+			}
+
+		});
+
+		Button backButton = (Button) findViewById(R.id.addcat_backButton);
+		backButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				AddCategory.this.finish();
+			}
+
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_splash, menu);
+		return true;
+	}
+}

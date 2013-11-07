@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center" >
+    
+    <TextView
+        android:id="@+id/SplashText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:text="@string/splash_text"
+        android:gravity="center"/>
+    
+    <ImageView
+        android:id="@+id/SplashImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/splash_image_desc"
+        android:src="@drawable/garfield" />
+        
+    </LinearLayout>

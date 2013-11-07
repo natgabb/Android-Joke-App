@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layoutAddCat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/addcat_textViewMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_small"
+                android:background="@color/mainBackground"
+                android:padding="@dimen/padding_small"
+                android:text="@string/addcat_message"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/addcat_textViewCat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_small"
+                android:layout_span="1"
+                android:background="@color/mainBackground"
+                android:padding="@dimen/padding_small"
+                android:text="@string/addcat_cat"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize" />
+
+            <EditText
+                android:id="@+id/addcat_editTextCat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text|textNoSuggestions"
+                android:text=""
+                android:textColor="@color/black" >
+
+                <requestFocus />
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/addcat_buttonAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/buttonBackground"
+                android:height="@dimen/main_buttonHeight"
+                android:text="@string/addcat_add"
+                android:textColor="@color/buttonText"
+                android:width="@dimen/main_buttonWidth" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/addcat_backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_small"
+                android:background="@color/buttonBackground"
+                android:height="@dimen/main_buttonHeight"
+                android:text="@string/goback"
+                android:textColor="@color/buttonText"
+                android:width="@dimen/main_buttonWidth" >
+            </Button>
+        </TableRow>
+    </LinearLayout>
+
+</ScrollView>
